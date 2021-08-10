@@ -62,10 +62,10 @@ function run() {
         if (!githubToken) {
             throw new Error('Missing github token. Check your env for GITHUB_TOKEN');
         }
-        const file = core.getInput('config', { required: true });
-        const cwd = process.env.GITHUB_WORKSPACE;
-        const config = yield load_1.default({}, { file, cwd });
         try {
+            const file = core.getInput('configPath', { required: true });
+            const cwd = process.env.GITHUB_WORKSPACE;
+            const config = yield load_1.default({}, { file, cwd });
             const client = github.getOctokit(githubToken);
             const contextPullRequest = github.context.payload.pull_request;
             if (!contextPullRequest) {
