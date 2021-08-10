@@ -1,12 +1,11 @@
-import * as core from '@actions/core'
+import * as core from '@actions/core';
 import * as github from '@actions/github';
 import lint from '@commitlint/lint';
-
 
 const githubToken = process.env.GITHUB_TOKEN;
 /**
  * Regex ожидает текст вида:
- * 
+ *
  * <Описание PRа для ревью>
  * ...
  * ...
@@ -15,8 +14,8 @@ const githubToken = process.env.GITHUB_TOKEN;
  * <Часть, которая попадает в коммит.
  * Включает в себя описание коммита,
  * примечания и ссылку на задачу в трекере>
- * 
- * 
+ *
+ *
  */
 const bodyRegex = /^(.|\n)*(\*{3})((.*|\n)*)$/;
 const commentsPattern = /(<!--.*?-->)|(<!--[\S\s]+?-->)|(<!--[\S\s]*?$)/g;
@@ -53,10 +52,14 @@ async function run(): Promise<void> {
 }
 
 async function validatePrTitle(title: string, subjectPattern?: string) {
-  const result = await lint(title, {'type-enum': [2, 'always', ['fix', 'feature']]});
+  const result = await lint(title, {
+    'type-enum': [2, 'always', ['fix', 'feature']]
+  });
 
   if (!result.valid) {
-    throw new Error(`Invalid PR title: ${result.errors.map(err => '\n- ' + err)}`)
+    throw new Error(
+      `Invalid PR title: ${result.errors.map(err => '\n- ' + err)}`
+    );
   }
 }
 
@@ -74,4 +77,4 @@ function getPRDescription(prBody: string | null) {
   return groups[3].replace(commentsPattern, '') ?? '';
 }
 
-run()
+run();
