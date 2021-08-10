@@ -83,7 +83,7 @@ function run() {
                 pull_number: contextPullRequest.number
             });
             yield validatePrTitle(pullRequest.title, config);
-            const description = getPRDescription(pullRequest.body);
+            const description = getCommitText(pullRequest.body, pullRequest.title);
             core.debug(description);
             core.setOutput('commitText', description);
         }
@@ -92,27 +92,28 @@ function run() {
         }
     });
 }
-function validatePrTitle(title, config) {
+function validatePrTitle(title, { rules, parserPreset }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield lint_1.default(title, config.rules);
+        const parserOpts = parserPreset.parserOpts;
+        const result = yield lint_1.default(title, rules, { parserOpts });
         if (!result.valid) {
             throw new Error(`Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`);
         }
     });
 }
-function getPRDescription(prBody) {
+function getCommitText(prBody, prTitle) {
     var _a;
     if (prBody == null) {
         core.debug('prBody is null');
-        return '';
+        return prTitle;
     }
     core.debug(prBody);
     const groups = prBody.match(bodyRegex);
     if (groups == null || groups[0] == null) {
         core.debug('PR has no description in valid format');
-        return '';
+        return prTitle;
     }
-    return (_a = groups[0].replace(commentsPattern, '')) !== null && _a !== void 0 ? _a : '';
+    return (_a = `${prTitle}\n${groups[0].replace(commentsPattern, '')}`) !== null && _a !== void 0 ? _a : '';
 }
 run();
 

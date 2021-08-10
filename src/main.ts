@@ -2,7 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import lint from '@commitlint/lint'
 import load from '@commitlint/load'
-import {QualifiedConfig} from '@commitlint/types'
+import {ParserOptions, QualifiedConfig} from '@commitlint/types'
 
 const githubToken = process.env.GITHUB_TOKEN
 /**
@@ -52,7 +52,7 @@ async function run(): Promise<void> {
     })
 
     await validatePrTitle(pullRequest.title, config)
-    const description = getPRDescription(pullRequest.body)
+    const description = getCommitText(pullRequest.body, pullRequest.title)
     core.debug(description)
     core.setOutput('commitText', description)
   } catch (error) {
@@ -62,9 +62,10 @@ async function run(): Promise<void> {
 
 async function validatePrTitle(
   title: string,
-  config: QualifiedConfig
+  {rules, parserPreset}: QualifiedConfig
 ): Promise<void> {
-  const result = await lint(title, config.rules)
+  const parserOpts = parserPreset.parserOpts as ParserOptions | undefined
+  const result = await lint(title, rules, {parserOpts})
 
   if (!result.valid) {
     throw new Error(
@@ -73,10 +74,10 @@ async function validatePrTitle(
   }
 }
 
-function getPRDescription(prBody: string | null): string {
+function getCommitText(prBody: string | null, prTitle: string): string {
   if (prBody == null) {
     core.debug('prBody is null')
-    return ''
+    return prTitle
   }
   core.debug(prBody)
 
@@ -84,10 +85,10 @@ function getPRDescription(prBody: string | null): string {
 
   if (groups == null || groups[0] == null) {
     core.debug('PR has no description in valid format')
-    return ''
+    return prTitle
   }
 
-  return groups[0].replace(commentsPattern, '') ?? ''
+  return `${prTitle}\n${groups[0].replace(commentsPattern, '')}` ?? ''
 }
 
 run()
