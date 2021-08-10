@@ -2,7 +2,7 @@
   "name": "typescript-action",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Validate PR title and description. Output commit message in conventional-changelog format",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -25,9 +25,16 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.4.0"
+    "@actions/core": "^1.4.0",
+    "@actions/github": "^5.0.0",
+    "@commitlint/lint": "^13.1.0",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
+    "conventional-commit-types": "^3.0.0",
+    "conventional-commits-parser": "^3.2.1"
   },
   "devDependencies": {
+    "@types/conventional-changelog": "^3.1.1",
+    "@types/conventional-commits-parser": "^3.0.2",
     "@types/node": "^16.3.3",
     "@typescript-eslint/parser": "^4.28.3",
     "@vercel/ncc": "^0.29.0",
