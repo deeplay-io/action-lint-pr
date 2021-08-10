@@ -1,5 +1,8 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import lint from '@commitlint/lint'
+import load from '@commitlint/load'
+import {QualifiedConfig} from '@commitlint/types'
 
 const githubToken = process.env.GITHUB_TOKEN
 /**
@@ -21,6 +24,10 @@ async function run(): Promise<void> {
   if (!githubToken) {
     throw new Error('Missing github token. Check your env for GITHUB_TOKEN')
   }
+
+  const file = core.getInput('config', {required: true})
+  const cwd = process.env.GITHUB_WORKSPACE
+  const config = await load({}, {file, cwd})
 
   try {
     const client = github.getOctokit(githubToken)
@@ -45,11 +52,25 @@ async function run(): Promise<void> {
       pull_number: contextPullRequest.number
     })
 
+    await validatePrTitle(pullRequest.title, config)
     const description = getPRDescription(pullRequest.body)
     core.debug(description)
     core.setOutput('commitText', description)
   } catch (error) {
     core.setFailed(error.message)
+  }
+}
+
+async function validatePrTitle(
+  title: string,
+  config: QualifiedConfig
+): Promise<void> {
+  const result = await lint(title, config.rules)
+
+  if (!result.valid) {
+    throw new Error(
+      `Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`
+    )
   }
 }
 
