@@ -2,8 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import lint from '@commitlint/lint'
 import load from '@commitlint/load'
-import {ParserOptions, QualifiedConfig} from '@commitlint/types'
-import {readFileSync} from 'fs'
+import {ParserOptions, QualifiedConfig, UserConfig} from '@commitlint/types'
 
 const githubToken = process.env.GITHUB_TOKEN
 /**
@@ -28,8 +27,7 @@ async function run(): Promise<void> {
 
   try {
     const file = core.getInput('configPath', {required: true})
-    const buffer = readFileSync(file)
-    const inputConfig = JSON.parse(buffer.toString())
+    const inputConfig: UserConfig = require(file)
     const config = await load(inputConfig)
     const client = github.getOctokit(githubToken)
 

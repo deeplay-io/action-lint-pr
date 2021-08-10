@@ -8,12 +8,13 @@
       "project": "./tsconfig.json"
     },
     "rules": {
+      // eslint-disable-next-line 
       "eslint-comments/no-use": "off",
       "import/no-namespace": "off",
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error",
       "@typescript-eslint/explicit-member-accessibility": ["error", {"accessibility": "no-public"}],
-      "@typescript-eslint/no-require-imports": "error",
+      "@typescript-eslint/no-require-imports": "off",
       "@typescript-eslint/array-type": "error",
       "@typescript-eslint/await-thenable": "error",
       "@typescript-eslint/ban-ts-comment": "error",
@@ -33,7 +34,7 @@
       "@typescript-eslint/no-unnecessary-qualifier": "error",
       "@typescript-eslint/no-unnecessary-type-assertion": "error",
       "@typescript-eslint/no-useless-constructor": "error",
-      "@typescript-eslint/no-var-requires": "error",
+      "@typescript-eslint/no-var-requires": "off",
       "@typescript-eslint/prefer-for-of": "warn",
       "@typescript-eslint/prefer-function-type": "warn",
       "@typescript-eslint/prefer-includes": "error",
