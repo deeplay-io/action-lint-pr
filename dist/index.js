@@ -105,7 +105,7 @@ function getPRDescription(prBody) {
         return '';
     }
     const groups = prBody.match(bodyRegex);
-    if (groups == null) {
+    if (groups == null || groups[3] == null) {
         return '';
     }
     return (_a = groups[3].replace(commentsPattern, '')) !== null && _a !== void 0 ? _a : '';

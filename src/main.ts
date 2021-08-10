@@ -75,7 +75,7 @@ function getPRDescription(prBody: string | null): string {
 
   const groups = prBody.match(bodyRegex)
 
-  if (groups == null) {
+  if (groups == null || groups[3] == null) {
     return ''
   }
 
