@@ -54,7 +54,7 @@ const githubToken = process.env.GITHUB_TOKEN;
  * Включает в себя описание коммита,
  * примечания и ссылку на задачу в трекере>
  */
-const bodyRegex = /^(.|\n)*(\*{3})((.*|\n)*)$/;
+const bodyRegex = /^(.*|\n)*(\*{3})((.*|\n)*)$/;
 const commentsPattern = /(<!--.*?-->)|(<!--[\S\s]+?-->)|(<!--[\S\s]*?$)/g;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
