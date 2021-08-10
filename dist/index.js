@@ -107,11 +107,11 @@ function getPRDescription(prBody) {
     }
     core.debug(prBody);
     const groups = prBody.match(bodyRegex);
-    if (groups == null || groups[3] == null) {
+    if (groups == null || groups[0] == null) {
         core.debug('PR has no description in valid format');
         return '';
     }
-    return (_a = groups[3].replace(commentsPattern, '')) !== null && _a !== void 0 ? _a : '';
+    return (_a = groups[0].replace(commentsPattern, '')) !== null && _a !== void 0 ? _a : '';
 }
 run();
 

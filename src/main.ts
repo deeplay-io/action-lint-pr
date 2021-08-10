@@ -77,12 +77,12 @@ function getPRDescription(prBody: string | null): string {
 
   const groups = prBody.match(bodyRegex)
 
-  if (groups == null || groups[3] == null) {
+  if (groups == null || groups[0] == null) {
     core.debug('PR has no description in valid format')
     return ''
   }
 
-  return groups[3].replace(commentsPattern, '') ?? ''
+  return groups[0].replace(commentsPattern, '') ?? ''
 }
 
 run()
