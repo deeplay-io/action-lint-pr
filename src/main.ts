@@ -54,8 +54,9 @@ async function run(): Promise<void> {
 }
 
 async function validatePrTitle(title: string): Promise<void> {
+  // TODO: get config from input
   const result = await lint(title, {
-    'type-enum': [2, 'always', ['fix', 'feature']]
+    'type-enum': [2, 'always', ['fix', 'feat']]
   })
 
   if (!result.valid) {
