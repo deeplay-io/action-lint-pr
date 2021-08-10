@@ -3,8 +3,6 @@ import * as github from '@actions/github'
 import lint from '@commitlint/lint'
 import load from '@commitlint/load'
 import {ParserOptions, QualifiedConfig} from '@commitlint/types'
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-require('@commitlint/config-conventional')
 
 const githubToken = process.env.GITHUB_TOKEN
 /**
@@ -30,7 +28,7 @@ async function run(): Promise<void> {
   try {
     const file = core.getInput('configPath', {required: true})
     const cwd = process.env.GITHUB_WORKSPACE
-    const config = await load({}, {file, cwd})
+    const config = await load(undefined, {file, cwd})
     const client = github.getOctokit(githubToken)
 
     const contextPullRequest = github.context.payload.pull_request
