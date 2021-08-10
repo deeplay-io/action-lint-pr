@@ -3,6 +3,8 @@ import * as github from '@actions/github'
 import lint from '@commitlint/lint'
 import load from '@commitlint/load'
 import {ParserOptions, QualifiedConfig} from '@commitlint/types'
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+require('@commitlint/config-conventional')
 
 const githubToken = process.env.GITHUB_TOKEN
 /**
