@@ -47,7 +47,9 @@ async function run(): Promise<void> {
     })
 
     await validatePrTitle(pullRequest.title)
-    core.setOutput('commitText', getPRDescription(pullRequest.body))
+    const description = getPRDescription(pullRequest.body)
+    core.debug(description)
+    core.setOutput('commitText', description)
   } catch (error) {
     core.setFailed(error.message)
   }
