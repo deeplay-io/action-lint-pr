@@ -53,19 +53,19 @@ async function run(): Promise<void> {
   }
 }
 
-async function validatePrTitle(title: string, subjectPattern?: string) {
+async function validatePrTitle(title: string): Promise<void> {
   const result = await lint(title, {
     'type-enum': [2, 'always', ['fix', 'feature']]
   })
 
   if (!result.valid) {
     throw new Error(
-      `Invalid PR title: ${result.errors.map(err => '\n- ' + err)}`
+      `Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`
     )
   }
 }
 
-function getPRDescription(prBody: string | null) {
+function getPRDescription(prBody: string | null): string {
   if (prBody == null) {
     return ''
   }
