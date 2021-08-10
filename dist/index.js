@@ -88,8 +88,9 @@ function run() {
 }
 function validatePrTitle(title) {
     return __awaiter(this, void 0, void 0, function* () {
+        // TODO: get config from input
         const result = yield lint_1.default(title, {
-            'type-enum': [2, 'always', ['fix', 'feature']]
+            'type-enum': [2, 'always', ['fix', 'feat']]
         });
         if (!result.valid) {
             throw new Error(`Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`);
