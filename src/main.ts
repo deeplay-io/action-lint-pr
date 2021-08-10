@@ -70,12 +70,15 @@ async function validatePrTitle(title: string): Promise<void> {
 
 function getPRDescription(prBody: string | null): string {
   if (prBody == null) {
+    core.debug('prBody is null')
     return ''
   }
+  core.debug(prBody)
 
   const groups = prBody.match(bodyRegex)
 
   if (groups == null || groups[3] == null) {
+    core.debug('PR has no description in valid format')
     return ''
   }
 

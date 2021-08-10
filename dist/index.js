@@ -102,10 +102,13 @@ function validatePrTitle(title) {
 function getPRDescription(prBody) {
     var _a;
     if (prBody == null) {
+        core.debug('prBody is null');
         return '';
     }
+    core.debug(prBody);
     const groups = prBody.match(bodyRegex);
     if (groups == null || groups[3] == null) {
+        core.debug('PR has no description in valid format');
         return '';
     }
     return (_a = groups[3].replace(commentsPattern, '')) !== null && _a !== void 0 ? _a : '';
