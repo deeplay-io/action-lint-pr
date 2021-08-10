@@ -29,6 +29,9 @@ jobs:
       - Basic
     steps:
       - uses: actions/checkout@v2
+      - uses: ahmadnassri/action-commit-lint@v1
+        with:
+          config: ./commitlint.config.js
       - uses: ./
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
