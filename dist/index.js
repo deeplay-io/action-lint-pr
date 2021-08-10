@@ -42,6 +42,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const lint_1 = __importDefault(__nccwpck_require__(9152));
 const load_1 = __importDefault(__nccwpck_require__(6791));
+const promises_1 = __nccwpck_require__(9225);
 const githubToken = process.env.GITHUB_TOKEN;
 /**
  * Regex ожидает текст вида:
@@ -64,8 +65,9 @@ function run() {
         }
         try {
             const file = core.getInput('configPath', { required: true });
-            const cwd = process.env.GITHUB_WORKSPACE;
-            const config = yield load_1.default(undefined, { file, cwd });
+            const buffer = yield promises_1.readFile(file);
+            const inputConfig = JSON.parse(buffer.toString());
+            const config = yield load_1.default(inputConfig);
             const client = github.getOctokit(githubToken);
             const contextPullRequest = github.context.payload.pull_request;
             if (!contextPullRequest) {
@@ -56233,6 +56235,14 @@ module.exports = require("events");
 
 "use strict";
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ 9225:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs/promises");
 
 /***/ }),
 
