@@ -56,6 +56,8 @@ async function run(): Promise<void> {
 }
 
 async function validatePrTitle(title: string): Promise<void> {
+  // TODO: get commitlint config from input
+  // Currently blocked by @commitlint/load issue on loading configuration
   const result = await lint(title, {
     'type-enum': [2, 'always', ['feat', 'fix']]
   })
