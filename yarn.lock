@@ -801,59 +801,6 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/conventional-changelog-core@*":
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/@types/conventional-changelog-core/-/conventional-changelog-core-4.1.2.tgz#ecade56705a8cb75431241172ca4654faf2bf79b"
-  integrity sha512-1V1QuKh5M3xAvZxCV+0AUPGnkMkbyU/tQcA1/EBR4ELdWBEZZ9Im5l2ADcTXeAvY1nbJmr8zRn5IVl1TVutwZA==
-  dependencies:
-    "@types/conventional-changelog-writer" "*"
-    "@types/conventional-commits-parser" "*"
-    "@types/conventional-recommended-bump" "*"
-    "@types/git-raw-commits" "*"
-    "@types/node" "*"
-    "@types/normalize-package-data" "*"
-
-"@types/conventional-changelog-writer@*":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@types/conventional-changelog-writer/-/conventional-changelog-writer-4.0.1.tgz#9e8db2acf34b0e51a7d39aa7f56ae00c4e276666"
-  integrity sha512-S7lJJByPMkkocMWnDKOtkSLi9yXu619+GhGejPnCiNK1Dgwjf5jjzBxXYgMv47tBG8MokmCCV1sWhI53lFl6FA==
-  dependencies:
-    "@types/conventional-commits-parser" "*"
-    "@types/node" "*"
-
-"@types/conventional-changelog@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@types/conventional-changelog/-/conventional-changelog-3.1.1.tgz#a126b9d264a834f2267f0822717a28c12aa352e1"
-  integrity sha512-+Ei7ZUTHnWseUthn22+MVLQjcQZ0AitqOk/UMl3/3aX5FMPofGeKVn/0HZYabsLN+kCioP3FpBrucrWdcCoMJw==
-  dependencies:
-    "@types/conventional-changelog-core" "*"
-    "@types/conventional-changelog-writer" "*"
-    "@types/conventional-commits-parser" "*"
-    "@types/node" "*"
-
-"@types/conventional-commits-parser@*", "@types/conventional-commits-parser@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@types/conventional-commits-parser/-/conventional-commits-parser-3.0.2.tgz#144b208c7344838bb045860fe1ddd10d4ae68f7c"
-  integrity sha512-1kVPUHFaart1iGRFxKn8WNXYEDVAgMb+DLatgql2dGg9jTGf3bNxWtN//C/tDG3ckOLg4u7SSx+qcn8VjzI5zg==
-  dependencies:
-    "@types/node" "*"
-
-"@types/conventional-recommended-bump@*":
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/@types/conventional-recommended-bump/-/conventional-recommended-bump-6.0.1.tgz#d63811c4d512e6b7d8f3193e7c5e2599af0cd6af"
-  integrity sha512-DRFjxe7zx781Qcf7wJhe0Fz28wilXfqex+ynYtMJ9QyS39DqbW2ykGpkRGc0FO/axyVhxUMK5yWZiGY022m9MA==
-  dependencies:
-    "@types/conventional-changelog-core" "*"
-    "@types/conventional-changelog-writer" "*"
-    "@types/conventional-commits-parser" "*"
-
-"@types/git-raw-commits@*":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@types/git-raw-commits/-/git-raw-commits-2.0.1.tgz#94bd91f6cfbc7174a47545424559de229998adc1"
-  integrity sha512-vE2lbXxqJ0AqMDoP4N6d+WVfbcBla9+z8IL6e+37JNQIwYZCYY0z3J7hdpY8D/VGwFZ0yIYQLcqk8eCnfXsaEg==
-  dependencies:
-    "@types/node" "*"
-
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"
@@ -895,7 +842,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.13.tgz#7dfd9c14661edc65cccd43a29eb454174642370d"
   integrity sha512-bLL69sKtd25w7p1nvg9pigE4gtKVpGTPojBFLMkGHXuUgap2sLqQt2qUnqmVCDfzGUL0DRNZP+1prIZJbMeAXg==
 
-"@types/normalize-package-data@*", "@types/normalize-package-data@^2.4.0":
+"@types/normalize-package-data@^2.4.0":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.1.tgz#d3357479a0fdfdd5907fe67e17e0a85c906e1301"
   integrity sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==
@@ -1436,7 +1383,7 @@ conventional-changelog-angular@^5.0.11:
     compare-func "^2.0.0"
     q "^1.5.1"
 
-conventional-changelog-conventionalcommits@^4.3.1, conventional-changelog-conventionalcommits@^4.6.0:
+conventional-changelog-conventionalcommits@^4.3.1:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/conventional-changelog-conventionalcommits/-/conventional-changelog-conventionalcommits-4.6.0.tgz#7fc17211dbca160acf24687bd2fdd5fd767750eb"
   integrity sha512-sj9tj3z5cnHaSJCYObA9nISf7eq/YjscLPoq6nmew4SiOjxqL2KRpK20fjnjVbpNDjJ2HR3MoVcWKXwbVvzS0A==
@@ -1445,12 +1392,7 @@ conventional-changelog-conventionalcommits@^4.3.1, conventional-changelog-conven
     lodash "^4.17.15"
     q "^1.5.1"
 
-conventional-commit-types@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/conventional-commit-types/-/conventional-commit-types-3.0.0.tgz#7c9214e58eae93e85dd66dbfbafe7e4fffa2365b"
-  integrity sha512-SmmCYnOniSsAa9GqWOeLqc179lfr5TRu5b4QFDkbsrJ5TZjPJx85wtOr3zn+1dbeNiXDKGPbZ72IKbPhLXh/Lg==
-
-conventional-commits-parser@^3.0.0, conventional-commits-parser@^3.2.1:
+conventional-commits-parser@^3.0.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/conventional-commits-parser/-/conventional-commits-parser-3.2.1.tgz#ba44f0b3b6588da2ee9fd8da508ebff50d116ce2"
   integrity sha512-OG9kQtmMZBJD/32NEw5IhN5+HnBqVjy03eC+I71I0oQRFA5rOgA4OtPOYG7mz1GkCfCNxn3gKIX8EiHJYuf1cA==

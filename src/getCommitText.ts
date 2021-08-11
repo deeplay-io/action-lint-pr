@@ -32,5 +32,5 @@ export function getCommitText(prBody: string | null, prTitle: string): string {
     // remove trailing line breaks if present
     .replace(/(\r\n|\r|\n)+$/, '')
 
-  return `${prTitle}${resultBody.length > 0 ? `\n${resultBody}` : ''}`
+  return `${prTitle}${resultBody.length > 0 ? `\n\n${resultBody}` : ''}`
 }
