@@ -4,7 +4,7 @@ author: 'finn@deeplay.io'
 inputs:
   configFile:
     description: Path to commitlint config file
-    required: false
+    default: ./commitlint.config.js
 outputs:
   commitText:
     description: Text generated for squash commit message

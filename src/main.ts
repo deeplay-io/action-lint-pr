@@ -56,6 +56,7 @@ async function run(): Promise<void> {
     core.debug(description)
     core.setOutput('commitText', description)
   } catch (error) {
+    core.debug(error.stack)
     core.setFailed(error.message)
   }
 }

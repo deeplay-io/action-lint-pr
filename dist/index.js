@@ -127,6 +127,7 @@ function run() {
             core.setOutput('commitText', description);
         }
         catch (error) {
+            core.debug(error.stack);
             core.setFailed(error.message);
         }
     });
