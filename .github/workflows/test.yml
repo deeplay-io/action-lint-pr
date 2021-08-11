@@ -1,14 +1,22 @@
 name: 'build-test'
-on: # rebuild any PRs and main branch changes
+on:
   pull_request:
-  push:
-    branches:
-      - main
-      - 'releases/*'
-
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+      - ready_for_review
 jobs:
-  build: # make sure build/ci work properly
-    runs-on: ubuntu-latest
+  build:
+    runs-on:
+      - self-hosted
+      - Linux
+      - Basic
+    container:
+      image: node:12
+      # https://github.com/actions/runner/issues/691
+      options: --user 1000
     steps:
       - uses: actions/checkout@v2
       - run: |
@@ -16,9 +24,18 @@ jobs:
       - run: |
           npm run all
   test: # make sure the action works on a clean machine without building
-    runs-on: ubuntu-latest
+    container:
+      image: node:12
+      # https://github.com/actions/runner/issues/691
+      options: --user 1000
+    runs-on:
+      - self-hosted
+      - Linux
+      - Basic
     steps:
       - uses: actions/checkout@v2
       - uses: ./
-        with:
-          milliseconds: 1000
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: commitMessage
+      - run: echo "${{ steps.commitMessage.outputs.commitText }}"

@@ -2,20 +2,20 @@
   "name": "typescript-action",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
-  "main": "lib/main.js",
+  "description": "Validate PR title and description. Output commit message in conventional-changelog format",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --license licenses.txt",
-    "test": "jest",
+    "package": "ncc build lib/main.js -C --source-map --license licenses.txt",
+    "test": "jest --passWithNoTests",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/deeplay-io/action-lint-pr.git"
   },
   "keywords": [
     "actions",
@@ -25,15 +25,24 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.4.0"
+    "@actions/core": "^1.4.0",
+    "@actions/github": "^5.0.0",
+    "@commitlint/lint": "^13.1.0",
+    "@commitlint/load": "^13.1.0",
+    "conventional-changelog-conventionalcommits": "^4.6.0",
+    "conventional-commit-types": "^3.0.0",
+    "conventional-commits-parser": "^3.2.1"
   },
   "devDependencies": {
+    "@types/conventional-changelog": "^3.1.1",
+    "@types/conventional-commits-parser": "^3.0.2",
     "@types/node": "^16.3.3",
     "@typescript-eslint/parser": "^4.28.3",
     "@vercel/ncc": "^0.29.0",
     "eslint": "^7.31.0",
     "eslint-plugin-github": "^4.1.1",
     "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.6",
     "js-yaml": "^4.1.0",
     "prettier": "2.2.1",
