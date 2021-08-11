@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import lint from '@commitlint/lint'
+import load from '@commitlint/load'
 import {getCommitText} from './getCommitText'
 
 const githubToken = process.env.GITHUB_TOKEN
@@ -46,7 +47,9 @@ async function validatePrTitle(title: string): Promise<void> {
   // TODO: get commitlint config from input
   // Currently blocked by @commitlint/load issue on loading configuration
   // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
+  const config = await load({extends: ['@commitlint/config-conventional']})
   const result = await lint(title, {
+    ...config.rules,
     'type-enum': [2, 'always', ['feat', 'fix']]
   })
 
