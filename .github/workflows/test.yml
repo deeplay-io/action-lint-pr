@@ -1,11 +1,11 @@
 name: 'build-test'
 on:
   pull_request:
-   - opened
-   - edited
-   - synchronize
-   - reopened
-   - ready_for_review
+    - opened
+    - edited
+    - synchronize
+    - reopened
+    - ready_for_review
 jobs:
   build:
     runs-on:
