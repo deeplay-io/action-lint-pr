@@ -36,11 +36,8 @@ async function run(): Promise<void> {
       pull_number: contextPullRequest.number
     })
 
-    const configFile = core.getInput('configFile', {required: true})
-    const config = await load(
-      {extends: ['@commitlint/config-conventional']},
-      {file: configFile, cwd: process.env.GITHUB_WORKSPACE}
-    )
+    // const configFile = core.getInput('configFile', {required: true})
+    const config = await load({extends: ['@commitlint/config-conventional']})
     await validatePrTitle(pullRequest.title, config)
 
     const description = getCommitText(pullRequest.body, pullRequest.title)

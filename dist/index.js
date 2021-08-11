@@ -110,8 +110,8 @@ function run() {
                 repo,
                 pull_number: contextPullRequest.number
             });
-            const configFile = core.getInput('configFile', { required: true });
-            const config = yield load_1.default({ extends: ['@commitlint/config-conventional'] }, { file: configFile, cwd: process.env.GITHUB_WORKSPACE });
+            // const configFile = core.getInput('configFile', {required: true})
+            const config = yield load_1.default({ extends: ['@commitlint/config-conventional'] });
             yield validatePrTitle(pullRequest.title, config);
             const description = getCommitText_1.getCommitText(pullRequest.body, pullRequest.title);
             core.debug(description);
