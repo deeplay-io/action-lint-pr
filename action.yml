@@ -1,6 +1,10 @@
 name: 'Action Lint PR'
 description: 'Lint PR title and description'
 author: 'finn@deeplay.io'
+inputs:
+  configFile:
+    description: Path to commitlint config file
+    required: true
 outputs:
   commitText:
     description: Text generated for squash commit message
