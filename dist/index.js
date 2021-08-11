@@ -87,8 +87,6 @@ __nccwpck_require__(5635);
 const lint_1 = __importDefault(__nccwpck_require__(9152));
 const load_1 = __importDefault(__nccwpck_require__(6791));
 const getCommitText_1 = __nccwpck_require__(699);
-const path_1 = __importDefault(__nccwpck_require__(5622));
-const fs_1 = __nccwpck_require__(5747);
 const githubToken = process.env.GITHUB_TOKEN;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -113,13 +111,8 @@ function run() {
                 pull_number: contextPullRequest.number
             });
             const configFile = core.getInput('configFile');
-            const configPath = configFile
-                ? path_1.default.resolve(
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                process.env.GITHUB_WORKSPACE, configFile)
-                : null;
-            const config = configPath && fs_1.existsSync(configPath)
-                ? yield load_1.default({}, { file: configPath })
+            const config = configFile
+                ? yield load_1.default({}, { file: configFile, cwd: process.env.GITHUB_WORKSPACE })
                 : yield load_1.default({ extends: ['@commitlint/config-conventional'] });
             yield validatePrTitle(pullRequest.title, config);
             const description = getCommitText_1.getCommitText(pullRequest.body, pullRequest.title);
@@ -7108,7 +7101,7 @@ exports.withCustomRequest = withCustomRequest;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 
-const VERSION = "2.15.0";
+const VERSION = "2.15.1";
 
 function ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -8490,7 +8483,7 @@ const Endpoints = {
   }
 };
 
-const VERSION = "5.7.0";
+const VERSION = "5.8.0";
 
 function endpointsToMethods(octokit, endpointsMap) {
   const newMethods = {};

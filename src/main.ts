@@ -5,8 +5,6 @@ import lint from '@commitlint/lint'
 import load from '@commitlint/load'
 import {LintOptions, ParserOptions, QualifiedConfig} from '@commitlint/types'
 import {getCommitText} from './getCommitText'
-import path from 'path'
-import {existsSync} from 'fs'
 
 const githubToken = process.env.GITHUB_TOKEN
 
@@ -39,17 +37,9 @@ async function run(): Promise<void> {
     })
 
     const configFile = core.getInput('configFile')
-    const configPath = configFile
-      ? path.resolve(
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          process.env.GITHUB_WORKSPACE!,
-          configFile
-        )
-      : null
-    const config =
-      configPath && existsSync(configPath)
-        ? await load({}, {file: configPath})
-        : await load({extends: ['@commitlint/config-conventional']})
+    const config = configFile
+      ? await load({}, {file: configFile, cwd: process.env.GITHUB_WORKSPACE})
+      : await load({extends: ['@commitlint/config-conventional']})
     await validatePrTitle(pullRequest.title, config)
 
     const description = getCommitText(pullRequest.body, pullRequest.title)
