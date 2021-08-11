@@ -38,15 +38,18 @@ async function run(): Promise<void> {
       pull_number: contextPullRequest.number
     })
 
-    const configPath = path.resolve(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      process.env.GITHUB_WORKSPACE!,
-      core.getInput('configFile')
-    )
-    core.debug(configPath)
-    const config = existsSync(configPath)
-      ? await load({}, {file: configPath})
-      : await load({extends: ['@commitlint/config-conventional']})
+    const configFile = core.getInput('configFile')
+    const configPath = configFile
+      ? path.resolve(
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          process.env.GITHUB_WORKSPACE!,
+          configFile
+        )
+      : null
+    const config =
+      configPath && existsSync(configPath)
+        ? await load({}, {file: configPath})
+        : await load({extends: ['@commitlint/config-conventional']})
     await validatePrTitle(pullRequest.title, config)
 
     const description = getCommitText(pullRequest.body, pullRequest.title)
