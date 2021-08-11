@@ -83,9 +83,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
+__nccwpck_require__(5635);
 const lint_1 = __importDefault(__nccwpck_require__(9152));
 const load_1 = __importDefault(__nccwpck_require__(6791));
 const getCommitText_1 = __nccwpck_require__(699);
+const path_1 = __importDefault(__nccwpck_require__(5622));
+const fs_1 = __nccwpck_require__(5747);
 const githubToken = process.env.GITHUB_TOKEN;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -109,7 +112,13 @@ function run() {
                 repo,
                 pull_number: contextPullRequest.number
             });
-            yield validatePrTitle(pullRequest.title);
+            const configPath = path_1.default.resolve(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            process.env.GITHUB_WORKSPACE, core.getInput('configFile'));
+            const config = fs_1.existsSync(configPath)
+                ? yield load_1.default({}, { file: configPath })
+                : yield load_1.default({ extends: ['@commitlint/config-conventional'] });
+            yield validatePrTitle(pullRequest.title, config);
             const description = getCommitText_1.getCommitText(pullRequest.body, pullRequest.title);
             core.debug(description);
             core.setOutput('commitText', description);
@@ -119,17 +128,27 @@ function run() {
         }
     });
 }
-function validatePrTitle(title) {
+function validatePrTitle(title, config) {
     return __awaiter(this, void 0, void 0, function* () {
         // TODO: get commitlint config from input
         // Currently blocked by @commitlint/load issue on loading configuration
         // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
-        const config = yield load_1.default({ extends: ['@commitlint/config-conventional'] });
-        const result = yield lint_1.default(title, Object.assign(Object.assign({}, config.rules), { 'type-enum': [2, 'always', ['feat', 'fix']] }));
+        const opts = getOptsFromConfig(config);
+        const result = yield lint_1.default(title, config.rules, opts);
         if (!result.valid) {
             throw new Error(`Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`);
         }
     });
+}
+function getOptsFromConfig(config) {
+    return {
+        parserOpts: config.parserPreset != null && config.parserPreset.parserOpts != null
+            ? config.parserPreset.parserOpts
+            : {},
+        plugins: config.plugins != null ? config.plugins : {},
+        ignores: config.ignores != null ? config.ignores : [],
+        defaultIgnores: config.defaultIgnores != null ? config.defaultIgnores : true
+    };
 }
 run();
 
@@ -3855,6 +3874,148 @@ module.exports = {
 
 /***/ }),
 
+/***/ 5635:
+/***/ ((module) => {
+
+module.exports = {
+	parserPreset: 'conventional-changelog-conventionalcommits',
+	rules: {
+		'body-leading-blank': [1, 'always'],
+		'body-max-line-length': [2, 'always', 100],
+		'footer-leading-blank': [1, 'always'],
+		'footer-max-line-length': [2, 'always', 100],
+		'header-max-length': [2, 'always', 100],
+		'subject-case': [
+			2,
+			'never',
+			['sentence-case', 'start-case', 'pascal-case', 'upper-case'],
+		],
+		'subject-empty': [2, 'never'],
+		'subject-full-stop': [2, 'never', '.'],
+		'type-case': [2, 'always', 'lower-case'],
+		'type-empty': [2, 'never'],
+		'type-enum': [
+			2,
+			'always',
+			[
+				'build',
+				'chore',
+				'ci',
+				'docs',
+				'feat',
+				'fix',
+				'perf',
+				'refactor',
+				'revert',
+				'style',
+				'test',
+			],
+		],
+	},
+	prompt: {
+		questions: {
+			type: {
+				description: "Select the type of change that you're committing",
+				enum: {
+					feat: {
+						description: 'A new feature',
+						title: 'Features',
+						emoji: '✨',
+					},
+					fix: {
+						description: 'A bug fix',
+						title: 'Bug Fixes',
+						emoji: '🐛',
+					},
+					docs: {
+						description: 'Documentation only changes',
+						title: 'Documentation',
+						emoji: '📚',
+					},
+					style: {
+						description:
+							'Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)',
+						title: 'Styles',
+						emoji: '💎',
+					},
+					refactor: {
+						description:
+							'A code change that neither fixes a bug nor adds a feature',
+						title: 'Code Refactoring',
+						emoji: '📦',
+					},
+					perf: {
+						description: 'A code change that improves performance',
+						title: 'Performance Improvements',
+						emoji: '🚀',
+					},
+					test: {
+						description: 'Adding missing tests or correcting existing tests',
+						title: 'Tests',
+						emoji: '🚨',
+					},
+					build: {
+						description:
+							'Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)',
+						title: 'Builds',
+						emoji: '🛠',
+					},
+					ci: {
+						description:
+							'Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)',
+						title: 'Continuous Integrations',
+						emoji: '⚙️',
+					},
+					chore: {
+						description: "Other changes that don't modify src or test files",
+						title: 'Chores',
+						emoji: '♻️',
+					},
+					revert: {
+						description: 'Reverts a previous commit',
+						title: 'Reverts',
+						emoji: '🗑',
+					},
+				},
+			},
+			scope: {
+				description:
+					'What is the scope of this change (e.g. component or file name)',
+			},
+			subject: {
+				description:
+					'Write a short, imperative tense description of the change',
+			},
+			body: {
+				description: 'Provide a longer description of the change',
+			},
+			isBreaking: {
+				description: 'Are there any breaking changes?',
+			},
+			breakingBody: {
+				description:
+					'A BREAKING CHANGE commit requires a body. Please enter a longer description of the commit itself',
+			},
+			breaking: {
+				description: 'Describe the breaking changes',
+			},
+			isIssueAffected: {
+				description: 'Does this change affect any open issues?',
+			},
+			issuesBody: {
+				description:
+					'If issues are closed, the commit requires a body. Please enter a longer description of the commit itself',
+			},
+			issues: {
+				description: 'Add issue references (e.g. "fix #123", "re #123".)',
+			},
+		},
+	},
+};
+
+
+/***/ }),
+
 /***/ 8445:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -4162,7 +4323,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const util_1 = __importDefault(__nccwpck_require__(1669));
 const is_ignored_1 = __importDefault(__nccwpck_require__(6871));
-const parse_1 = __importDefault(__nccwpck_require__(5635));
+const parse_1 = __importDefault(__nccwpck_require__(540));
 const rules_1 = __importDefault(__nccwpck_require__(3383));
 const commit_message_1 = __nccwpck_require__(8560);
 const types_1 = __nccwpck_require__(3534);
@@ -4680,7 +4841,7 @@ function message(input = []) {
 
 /***/ }),
 
-/***/ 5635:
+/***/ 540:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";

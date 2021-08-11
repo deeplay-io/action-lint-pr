@@ -1,8 +1,12 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import '@commitlint/config-conventional'
 import lint from '@commitlint/lint'
 import load from '@commitlint/load'
+import {LintOptions, ParserOptions, QualifiedConfig} from '@commitlint/types'
 import {getCommitText} from './getCommitText'
+import path from 'path'
+import {existsSync} from 'fs'
 
 const githubToken = process.env.GITHUB_TOKEN
 
@@ -34,7 +38,16 @@ async function run(): Promise<void> {
       pull_number: contextPullRequest.number
     })
 
-    await validatePrTitle(pullRequest.title)
+    const configPath = path.resolve(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      process.env.GITHUB_WORKSPACE!,
+      core.getInput('configFile')
+    )
+    const config = existsSync(configPath)
+      ? await load({}, {file: configPath})
+      : await load({extends: ['@commitlint/config-conventional']})
+    await validatePrTitle(pullRequest.title, config)
+
     const description = getCommitText(pullRequest.body, pullRequest.title)
     core.debug(description)
     core.setOutput('commitText', description)
@@ -43,20 +56,32 @@ async function run(): Promise<void> {
   }
 }
 
-async function validatePrTitle(title: string): Promise<void> {
+async function validatePrTitle(
+  title: string,
+  config: QualifiedConfig
+): Promise<void> {
   // TODO: get commitlint config from input
   // Currently blocked by @commitlint/load issue on loading configuration
   // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
-  const config = await load({extends: ['@commitlint/config-conventional']})
-  const result = await lint(title, {
-    ...config.rules,
-    'type-enum': [2, 'always', ['feat', 'fix']]
-  })
+  const opts = getOptsFromConfig(config)
+  const result = await lint(title, config.rules, opts)
 
   if (!result.valid) {
     throw new Error(
       `Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`
     )
+  }
+}
+
+function getOptsFromConfig(config: QualifiedConfig): LintOptions {
+  return {
+    parserOpts:
+      config.parserPreset != null && config.parserPreset.parserOpts != null
+        ? (config.parserPreset.parserOpts as ParserOptions)
+        : {},
+    plugins: config.plugins != null ? config.plugins : {},
+    ignores: config.ignores != null ? config.ignores : [],
+    defaultIgnores: config.defaultIgnores != null ? config.defaultIgnores : true
   }
 }
 
