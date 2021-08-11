@@ -38,7 +38,7 @@ async function run(): Promise<void> {
 
     const configFile = core.getInput('configFile', {required: true})
     const config = await load(
-      {},
+      {extends: ['@commitlint/config-conventional']},
       {file: configFile, cwd: process.env.GITHUB_WORKSPACE}
     )
     await validatePrTitle(pullRequest.title, config)
