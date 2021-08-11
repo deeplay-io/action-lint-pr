@@ -27,9 +27,9 @@
   "dependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@commitlint/lint": "^12.1.4",
-    "@commitlint/load": "^12.1.4",
-    "@commitlint/config-conventional": "^12.1.4"
+    "@commitlint/config-conventional": "^13.1.0",
+    "@commitlint/lint": "^13.1.0",
+    "@commitlint/load": "^13.1.0"
   },
   "devDependencies": {
     "@types/node": "^16.3.3",

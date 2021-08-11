@@ -9,5 +9,6 @@ outputs:
   commitText:
     description: Text generated for squash commit message
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  runs:
+  using: docker
+  image: Dockerfile
