@@ -2,6 +2,7 @@
 
 exports[`getCommitText matches snapshots 1`] = `
 "feat: test test test
+
 KEY-42
 
 ## Примечания
@@ -23,5 +24,6 @@ exports[`getCommitText matches snapshots 7`] = `"feat: test test test"`;
 
 exports[`getCommitText matches snapshots 8`] = `
 "feat: test test test
+
 KEY-42"
 `;
