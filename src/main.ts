@@ -33,20 +33,29 @@ async function run(): Promise<void> {
       pull_number: contextPullRequest.number
     })
 
-    await validatePrTitle(pullRequest.title)
-    const description = getCommitText(pullRequest.body, pullRequest.title)
-    core.debug(description)
-    core.setOutput('commitText', description)
+    const commitText = getCommitText(pullRequest.body, pullRequest.title)
+    await validateCommitMessage(commitText)
+    core.debug(commitText)
+    core.setOutput('commitText', commitText)
   } catch (error) {
     core.setFailed(error.message)
   }
 }
 
-async function validatePrTitle(title: string): Promise<void> {
+async function validateCommitMessage(commitMessage: string): Promise<void> {
   // TODO: get commitlint config from input
   // Currently blocked by @commitlint/load issue on loading configuration
   // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
-  const result = await lint(title, {
+  const result = await lint(commitMessage, {
+    'body-leading-blank': [1, 'always'],
+    'body-max-line-length': [2, 'always', 100],
+    'footer-leading-blank': [1, 'always'],
+    'footer-max-line-length': [2, 'always', 100],
+    'header-max-length': [2, 'always', 100],
+    'subject-empty': [2, 'never'],
+    'subject-full-stop': [2, 'never', '.'],
+    'type-case': [2, 'always', 'lower-case'],
+    'type-empty': [2, 'never'],
     'type-enum': [2, 'always', ['feat', 'fix']]
   })
 
