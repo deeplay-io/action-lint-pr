@@ -61,7 +61,9 @@ async function validateCommitMessage(commitMessage: string): Promise<void> {
 
   if (!result.valid) {
     throw new Error(
-      `Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`
+      `Invalid commit message: ${result.errors.map(
+        err => `\n- ${err.message}`
+      )}`
     )
   }
 }

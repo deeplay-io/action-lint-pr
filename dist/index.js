@@ -136,7 +136,7 @@ function validateCommitMessage(commitMessage) {
             'type-enum': [2, 'always', ['feat', 'fix']]
         });
         if (!result.valid) {
-            throw new Error(`Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`);
+            throw new Error(`Invalid commit message: ${result.errors.map(err => `\n- ${err.message}`)}`);
         }
     });
 }
