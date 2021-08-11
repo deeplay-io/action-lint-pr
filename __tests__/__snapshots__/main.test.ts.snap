@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getCommitText matches snapshots 1`] = `
+"feat: test test test
+KEY-42
+
+## Примечания
+
+Тест-тест-тест"
+`;
+
+exports[`getCommitText matches snapshots 2`] = `"feat: test test test"`;
+
+exports[`getCommitText matches snapshots 3`] = `"feat: test test test"`;
+
+exports[`getCommitText matches snapshots 4`] = `"feat: test test test"`;
+
+exports[`getCommitText matches snapshots 5`] = `"feat: test test test"`;
+
+exports[`getCommitText matches snapshots 6`] = `"feat: test test test"`;
+
+exports[`getCommitText matches snapshots 7`] = `"feat: test test test"`;
+
+exports[`getCommitText matches snapshots 8`] = `
+"feat: test test test
+KEY-42"
+`;

@@ -1,28 +1,63 @@
-// import {wait} from '../src/wait'
-// import * as process from 'process'
-// import * as cp from 'child_process'
-// import * as path from 'path'
+import {getCommitText} from '../src/getCommitText'
 import {expect, test} from '@jest/globals'
 
-test('test', async () => {
-  expect(true).toBeTruthy()
+const title = 'feat: test test test'
+const body1 = `Test-test-test
+test test
+- [] do smth
+- [x] test
+<!--Коммент-->
+***
+KEY-42
+<!--Коммент-->
+## Примечания
+<!--Коммент-->
+Тест-тест-тест`
+const body2 = ''
+const body3 = `
+- [] test
+- [] bla-bla
+
+## Примечания
+
+`
+const body4 = `
+bla-bla
+
+KEY-42
+
+
+
+## Примечания
+      Тест-тест-тест
+
+***
+<!--Коммент-->
+<!--Коммент-->
+`
+const body5 = '\n'
+const body6 = '\r'
+const body7 = '\r\n'
+const body8 = `
+Тест
+
+***
+
+
+
+
+
+KEY-42
+<!--Коммент-->
+`
+
+test('getCommitText matches snapshots', async () => {
+  expect(getCommitText(body1, title)).toMatchSnapshot()
+  expect(getCommitText(body2, title)).toMatchSnapshot()
+  expect(getCommitText(body3, title)).toMatchSnapshot()
+  expect(getCommitText(body4, title)).toMatchSnapshot()
+  expect(getCommitText(body5, title)).toMatchSnapshot()
+  expect(getCommitText(body6, title)).toMatchSnapshot()
+  expect(getCommitText(body7, title)).toMatchSnapshot()
+  expect(getCommitText(body8, title)).toMatchSnapshot()
 })
-
-// test('wait 500 ms', async () => {
-//   const start = new Date()
-//   await wait(500)
-//   const end = new Date()
-//   var delta = Math.abs(end.getTime() - start.getTime())
-//   expect(delta).toBeGreaterThan(450)
-// })
-
-// // shows how the runner will run a javascript action with env / stdout protocol
-// test('test runs', () => {
-//   process.env['INPUT_MILLISECONDS'] = '500'
-//   const np = process.execPath
-//   const ip = path.join(__dirname, '..', 'lib', 'main.js')
-//   const options: cp.ExecFileSyncOptions = {
-//     env: process.env
-//   }
-//   console.log(cp.execFileSync(np, [ip], options).toString())
-// })

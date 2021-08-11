@@ -1,6 +1,49 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 699:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getCommitText = void 0;
+/**
+ * Regex ожидает текст вида:
+ *
+ * <Описание PRа для ревью>
+ * ...
+ * ...
+ * ...
+ * ***
+ * <Часть, которая попадает в коммит.
+ * Включает в себя описание коммита,
+ * примечания и ссылку на задачу в трекере>
+ */
+const bodyRegex = /^.*\*{3}(.*)$/s;
+const commentsPattern = /(<!--.*?-->)|(<!--[\S\s]+?-->)|(<!--[\S\s]*?$)/g;
+function getCommitText(prBody, prTitle) {
+    if (prBody == null) {
+        return prTitle;
+    }
+    const groups = prBody.match(bodyRegex);
+    if (groups == null || groups[1] == null) {
+        return prTitle;
+    }
+    const resultBody = groups[1]
+        // remove markdown comments
+        .replace(commentsPattern, '')
+        // remove leading line breaks if present
+        .replace(/^(\r\n|\r|\n)+/, '')
+        // remove trailing line breaks if present
+        .replace(/(\r\n|\r|\n)+$/, '');
+    return `${prTitle}${resultBody.length > 0 ? `\n${resultBody}` : ''}`;
+}
+exports.getCommitText = getCommitText;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -41,21 +84,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const lint_1 = __importDefault(__nccwpck_require__(9152));
+const getCommitText_1 = __nccwpck_require__(699);
 const githubToken = process.env.GITHUB_TOKEN;
-/**
- * Regex ожидает текст вида:
- *
- * <Описание PRа для ревью>
- * ...
- * ...
- * ...
- * ***
- * <Часть, которая попадает в коммит.
- * Включает в себя описание коммита,
- * примечания и ссылку на задачу в трекере>
- */
-const bodyRegex = /^.*\*{3}(.*)$/s;
-const commentsPattern = /(<!--.*?-->)|(<!--[\S\s]+?-->)|(<!--[\S\s]*?$)/g;
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         if (!githubToken) {
@@ -79,7 +109,7 @@ function run() {
                 pull_number: contextPullRequest.number
             });
             yield validatePrTitle(pullRequest.title);
-            const description = getCommitText(pullRequest.body, pullRequest.title);
+            const description = getCommitText_1.getCommitText(pullRequest.body, pullRequest.title);
             core.debug(description);
             core.setOutput('commitText', description);
         }
@@ -90,25 +120,16 @@ function run() {
 }
 function validatePrTitle(title) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield lint_1.default(title, { 'type-enum': [2, 'always', ['feat', 'fix']] });
+        // TODO: get commitlint config from input
+        // Currently blocked by @commitlint/load issue on loading configuration
+        // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
+        const result = yield lint_1.default(title, {
+            'type-enum': [2, 'always', ['feat', 'fix']]
+        });
         if (!result.valid) {
             throw new Error(`Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`);
         }
     });
-}
-function getCommitText(prBody, prTitle) {
-    var _a;
-    if (prBody == null) {
-        core.debug('prBody is null');
-        return prTitle;
-    }
-    core.debug(prBody);
-    const groups = prBody.match(bodyRegex);
-    if (groups == null || groups[0] == null) {
-        core.debug('PR has no description in valid format');
-        return prTitle;
-    }
-    return (_a = `${prTitle}\n${groups[0].replace(commentsPattern, '')}`) !== null && _a !== void 0 ? _a : '';
 }
 run();
 

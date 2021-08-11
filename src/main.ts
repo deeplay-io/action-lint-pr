@@ -1,22 +1,9 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import lint from '@commitlint/lint'
+import {getCommitText} from './getCommitText'
 
 const githubToken = process.env.GITHUB_TOKEN
-/**
- * Regex ожидает текст вида:
- *
- * <Описание PRа для ревью>
- * ...
- * ...
- * ...
- * ***
- * <Часть, которая попадает в коммит.
- * Включает в себя описание коммита,
- * примечания и ссылку на задачу в трекере>
- */
-const bodyRegex = /^.*\*{3}(.*)$/s
-const commentsPattern = /(<!--.*?-->)|(<!--[\S\s]+?-->)|(<!--[\S\s]*?$)/g
 
 async function run(): Promise<void> {
   if (!githubToken) {
@@ -58,6 +45,7 @@ async function run(): Promise<void> {
 async function validatePrTitle(title: string): Promise<void> {
   // TODO: get commitlint config from input
   // Currently blocked by @commitlint/load issue on loading configuration
+  // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
   const result = await lint(title, {
     'type-enum': [2, 'always', ['feat', 'fix']]
   })
@@ -67,23 +55,6 @@ async function validatePrTitle(title: string): Promise<void> {
       `Invalid PR title: ${result.errors.map(err => `\n- ${err.message}`)}`
     )
   }
-}
-
-function getCommitText(prBody: string | null, prTitle: string): string {
-  if (prBody == null) {
-    core.debug('prBody is null')
-    return prTitle
-  }
-  core.debug(prBody)
-
-  const groups = prBody.match(bodyRegex)
-
-  if (groups == null || groups[0] == null) {
-    core.debug('PR has no description in valid format')
-    return prTitle
-  }
-
-  return `${prTitle}\n\n${groups[0].replace(commentsPattern, '')}` ?? ''
 }
 
 run()
