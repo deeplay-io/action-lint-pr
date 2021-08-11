@@ -83,7 +83,7 @@ function getCommitText(prBody: string | null, prTitle: string): string {
     return prTitle
   }
 
-  return `${prTitle}\n${groups[0].replace(commentsPattern, '')}` ?? ''
+  return `${prTitle}\n\n${groups[0].replace(commentsPattern, '')}` ?? ''
 }
 
 run()
