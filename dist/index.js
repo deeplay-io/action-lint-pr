@@ -115,6 +115,7 @@ function run() {
             const configPath = path_1.default.resolve(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             process.env.GITHUB_WORKSPACE, core.getInput('configFile'));
+            core.debug(configPath);
             const config = fs_1.existsSync(configPath)
                 ? yield load_1.default({}, { file: configPath })
                 : yield load_1.default({ extends: ['@commitlint/config-conventional'] });

@@ -43,6 +43,7 @@ async function run(): Promise<void> {
       process.env.GITHUB_WORKSPACE!,
       core.getInput('configFile')
     )
+    core.debug(configPath)
     const config = existsSync(configPath)
       ? await load({}, {file: configPath})
       : await load({extends: ['@commitlint/config-conventional']})
