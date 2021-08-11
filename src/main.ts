@@ -1,9 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import lint from '@commitlint/lint'
-import load from '@commitlint/load'
-import path from 'path'
-import {ParserOptions, QualifiedConfig, UserConfig} from '@commitlint/types'
 
 const githubToken = process.env.GITHUB_TOKEN
 /**
@@ -27,16 +24,6 @@ async function run(): Promise<void> {
   }
 
   try {
-    const file = core.getInput('configPath', {required: true})
-    if (!process.env.GITHUB_WORKSPACE) {
-      throw new Error('No workspace')
-    }
-    core.debug(process.env.GITHUB_WORKSPACE)
-    const inputConfig: UserConfig = require(path.join(
-      process.env.GITHUB_WORKSPACE,
-      file
-    ))
-    const config = await load(inputConfig)
     const client = github.getOctokit(githubToken)
 
     const contextPullRequest = github.context.payload.pull_request
@@ -59,7 +46,7 @@ async function run(): Promise<void> {
       pull_number: contextPullRequest.number
     })
 
-    await validatePrTitle(pullRequest.title, config)
+    await validatePrTitle(pullRequest.title)
     const description = getCommitText(pullRequest.body, pullRequest.title)
     core.debug(description)
     core.setOutput('commitText', description)
@@ -68,12 +55,10 @@ async function run(): Promise<void> {
   }
 }
 
-async function validatePrTitle(
-  title: string,
-  {rules, parserPreset}: QualifiedConfig
-): Promise<void> {
-  const parserOpts = parserPreset.parserOpts as ParserOptions | undefined
-  const result = await lint(title, rules, {parserOpts})
+async function validatePrTitle(title: string): Promise<void> {
+  const result = await lint(title, {
+    'type-enum': [2, 'always', ['feat', 'fix']]
+  })
 
   if (!result.valid) {
     throw new Error(
