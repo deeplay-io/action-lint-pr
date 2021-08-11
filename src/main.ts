@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import lint from '@commitlint/lint'
 import load from '@commitlint/load'
+import path from 'path'
 import {ParserOptions, QualifiedConfig, UserConfig} from '@commitlint/types'
 
 const githubToken = process.env.GITHUB_TOKEN
@@ -27,7 +28,14 @@ async function run(): Promise<void> {
 
   try {
     const file = core.getInput('configPath', {required: true})
-    const inputConfig: UserConfig = require(file)
+    if (!process.env.GITHUB_WORKSPACE) {
+      throw new Error('No workspace')
+    }
+    core.debug(process.env.GITHUB_WORKSPACE)
+    const inputConfig: UserConfig = require(path.join(
+      process.env.GITHUB_WORKSPACE,
+      file
+    ))
     const config = await load(inputConfig)
     const client = github.getOctokit(githubToken)
 

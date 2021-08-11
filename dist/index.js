@@ -42,6 +42,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const lint_1 = __importDefault(__nccwpck_require__(9152));
 const load_1 = __importDefault(__nccwpck_require__(6791));
+const path_1 = __importDefault(__nccwpck_require__(5622));
 const githubToken = process.env.GITHUB_TOKEN;
 /**
  * Regex ожидает текст вида:
@@ -64,7 +65,11 @@ function run() {
         }
         try {
             const file = core.getInput('configPath', { required: true });
-            const inputConfig = require(file);
+            if (!process.env.GITHUB_WORKSPACE) {
+                throw new Error('No workspace');
+            }
+            core.debug(process.env.GITHUB_WORKSPACE);
+            const inputConfig = require(path_1.default.join(process.env.GITHUB_WORKSPACE, file));
             const config = yield load_1.default(inputConfig);
             const client = github.getOctokit(githubToken);
             const contextPullRequest = github.context.payload.pull_request;
