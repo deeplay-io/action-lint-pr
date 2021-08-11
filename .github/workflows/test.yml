@@ -9,14 +9,9 @@ on:
       - ready_for_review
 jobs:
   build:
-    runs-on:
-      - self-hosted
-      - Linux
-      - Basic
+    runs-on: ubuntu-latest
     container:
       image: node:12
-      # https://github.com/actions/runner/issues/691
-      options: --user 1000
     steps:
       - uses: actions/checkout@v2
       - run: |
@@ -26,12 +21,7 @@ jobs:
   test: # make sure the action works on a clean machine without building
     container:
       image: node:12
-      # https://github.com/actions/runner/issues/691
-      options: --user 1000
-    runs-on:
-      - self-hosted
-      - Linux
-      - Basic
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ./
