@@ -33,4 +33,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         id: commitMessage
-      - run: echo ${{ steps.commitMessage.outputs.commitText }}
+      - run: echo "${{ steps.commitMessage.outputs.commitText }}"
