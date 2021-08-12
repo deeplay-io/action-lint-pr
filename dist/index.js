@@ -15,12 +15,12 @@ exports.getCommitText = void 0;
  * ...
  * ...
  * ...
- * ***
+ * ---
  * <Часть, которая попадает в коммит.
  * Включает в себя описание коммита,
  * примечания и ссылку на задачу в трекере>
  */
-const bodyRegex = /^.*\*{3}(.*)$/s;
+const bodyRegex = /^.*-{3}(.*)$/s;
 const commentsPattern = /(<!--.*?-->)|(<!--[\S\s]+?-->)|(<!--[\S\s]*?$)/g;
 function getCommitText(prBody, prTitle) {
     if (prBody == null) {
@@ -37,7 +37,7 @@ function getCommitText(prBody, prTitle) {
         .replace(/^(\r\n|\r|\n)+/, '')
         // remove trailing line breaks if present
         .replace(/(\r\n|\r|\n)+$/, '');
-    return `${prTitle}${resultBody.length > 0 ? `\n${resultBody}` : ''}`;
+    return `${prTitle}${resultBody.length > 0 ? `\n\n${resultBody}` : ''}`;
 }
 exports.getCommitText = getCommitText;
 

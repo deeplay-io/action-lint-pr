@@ -50,6 +50,13 @@ const body8 = `
 KEY-42
 <!--Коммент-->
 `
+const body9 = `
+Тест
+---
+
+KEY-42
+<!--Коммент-->
+`
 
 test('getCommitText matches snapshots', async () => {
   expect(getCommitText(body1, title)).toMatchSnapshot()
@@ -60,4 +67,5 @@ test('getCommitText matches snapshots', async () => {
   expect(getCommitText(body6, title)).toMatchSnapshot()
   expect(getCommitText(body7, title)).toMatchSnapshot()
   expect(getCommitText(body8, title)).toMatchSnapshot()
+  expect(getCommitText(body9, title)).toMatchSnapshot()
 })
