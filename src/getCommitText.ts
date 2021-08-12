@@ -5,12 +5,12 @@
  * ...
  * ...
  * ...
- * ***
+ * ---
  * <Часть, которая попадает в коммит.
  * Включает в себя описание коммита,
  * примечания и ссылку на задачу в трекере>
  */
-const bodyRegex = /^.*\*{3}(.*)$/s
+const bodyRegex = /^.*-{3}(.*)$/s
 const commentsPattern = /(<!--.*?-->)|(<!--[\S\s]+?-->)|(<!--[\S\s]*?$)/g
 
 export function getCommitText(prBody: string | null, prTitle: string): string {
