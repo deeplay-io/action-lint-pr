@@ -124,16 +124,9 @@ function validateCommitMessage(commitMessage) {
         // Currently blocked by @commitlint/load issue on loading configuration
         // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
         const result = yield lint_1.default(commitMessage, {
-            'body-leading-blank': [1, 'always'],
-            'body-max-line-length': [2, 'always', 100],
-            'footer-leading-blank': [1, 'always'],
-            'footer-max-line-length': [2, 'always', 100],
-            'header-max-length': [2, 'always', 100],
-            'subject-empty': [2, 'never'],
-            'subject-full-stop': [2, 'never', '.'],
             'type-case': [2, 'always', 'lower-case'],
             'type-empty': [2, 'never'],
-            'type-enum': [2, 'always', ['feat', 'fix']]
+            'type-enum': [2, 'always', ['feat', 'chore']]
         });
         if (!result.valid) {
             throw new Error(`Invalid commit message: ${result.errors.map(err => `\n- ${err.message}`)}`);
