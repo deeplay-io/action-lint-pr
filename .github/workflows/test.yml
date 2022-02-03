@@ -33,6 +33,6 @@ jobs:
             {
               "type-case": [2, "always", "lower-case"],
               "type-empty": [2, "never"],
-              "type-enum": [2, "always", ["feat", "chore"]]
+              "type-enum": [2, "always", ["feat", "fix"]]
             }
       - run: echo "${{ steps.commitMessage.outputs.commitText }}"
