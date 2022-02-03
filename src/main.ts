@@ -19,8 +19,8 @@ async function run(): Promise<void> {
     if (configJson) {
       try {
         config = JSON.parse(core.getInput('config'))
-      } catch (err: any) {
-        throw new Error(`Failed to parse config json: ${err.message}`)
+      } catch (err) {
+        throw new Error(`Failed to parse config json: ${(err as any).message}`)
       }
     } else {
       config = {
@@ -56,7 +56,7 @@ async function run(): Promise<void> {
     await validateCommitMessage(commitText, config)
     core.debug(commitText)
     core.setOutput('commitText', commitText)
-  } catch (error: any) {
+  } catch (error) {
     core.setFailed(error.message)
   }
 }
