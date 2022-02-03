@@ -14,6 +14,8 @@ async function run(): Promise<void> {
   try {
     const configJson = core.getInput('config')
 
+    core.debug('config', configJson)
+
     let config: QualifiedRules
 
     if (configJson) {
