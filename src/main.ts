@@ -14,11 +14,13 @@ async function run(): Promise<void> {
   try {
     const configJson = core.getInput('config')
 
+    core.debug(`config: ${configJson}`)
+
     let config: QualifiedRules
 
     if (configJson) {
       try {
-        config = JSON.parse(core.getInput('config'))
+        config = JSON.parse(configJson)
       } catch (err: any) {
         throw new Error(`Failed to parse config json: ${err.message}`)
       }
