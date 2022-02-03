@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import lint from '@commitlint/lint'
+import {QualifiedRules} from '@commitlint/types'
 import {getCommitText} from './getCommitText'
 
 const githubToken = process.env.GITHUB_TOKEN
@@ -11,6 +12,24 @@ async function run(): Promise<void> {
   }
 
   try {
+    const configJson = core.getInput('config')
+
+    let config: QualifiedRules
+
+    if (configJson) {
+      try {
+        config = JSON.parse(core.getInput('config'))
+      } catch (err: any) {
+        throw new Error(`Failed to parse config json: ${err.message}`)
+      }
+    } else {
+      config = {
+        'type-case': [2, 'always', 'lower-case'],
+        'type-empty': [2, 'never'],
+        'type-enum': [2, 'always', ['feat', 'chore']]
+      }
+    }
+
     const client = github.getOctokit(githubToken)
 
     const contextPullRequest = github.context.payload.pull_request
@@ -34,23 +53,19 @@ async function run(): Promise<void> {
     })
 
     const commitText = getCommitText(pullRequest.body, pullRequest.title)
-    await validateCommitMessage(commitText)
+    await validateCommitMessage(commitText, config)
     core.debug(commitText)
     core.setOutput('commitText', commitText)
-  } catch (error) {
+  } catch (error: any) {
     core.setFailed(error.message)
   }
 }
 
-async function validateCommitMessage(commitMessage: string): Promise<void> {
-  // TODO: get commitlint config from input
-  // Currently blocked by @commitlint/load issue on loading configuration
-  // Similar issue – https://github.com/conventional-changelog/commitlint/issues/613
-  const result = await lint(commitMessage, {
-    'type-case': [2, 'always', 'lower-case'],
-    'type-empty': [2, 'never'],
-    'type-enum': [2, 'always', ['feat', 'chore']]
-  })
+async function validateCommitMessage(
+  commitMessage: string,
+  config: QualifiedRules
+): Promise<void> {
+  const result = await lint(commitMessage, config)
 
   if (!result.valid) {
     throw new Error(

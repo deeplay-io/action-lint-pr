@@ -1,6 +1,10 @@
 name: 'Action Lint PR'
 description: 'Lint PR title and description'
 author: 'finn@deeplay.io'
+inputs:
+  config:
+    description: 'Commitlint config JSON'
+    required: false
 outputs:
   commitText:
     description: Text generated for squash commit message
